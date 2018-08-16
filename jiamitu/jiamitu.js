@@ -65,7 +65,7 @@
                 },
                 buyJump: function(event){
                     if($(event.path[1]).attr('class')==='pet-box'){
-                        location.href = 'https://jiamitu.mi.com/babydetail?petId=' + $(event.path[1]).attr('pet-id');
+                        window.open('https://jiamitu.mi.com/babydetail?petId=' + $(event.path[1]).attr('pet-id'));
                     }
                 }
             },

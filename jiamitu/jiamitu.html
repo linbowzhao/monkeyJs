@@ -10,20 +10,20 @@
   <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
   <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
   <script>
-    (function (doc, win) {
-      // 获取页面所有html代码字符串
-      var docEl = doc.documentElement,
-        resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
-        recalc = function () {
-          var clientWidth = docEl.clientWidth > 750 ? 360 : docEl.clientWidth
-          if (!clientWidth) return
-          docEl.style.fontSize = clientWidth / 750 * 100 + 'px'
-        }
-      if (!doc.addEventListener) return
-      doc.addEventListener('DOMContentLoaded', recalc, false)
-      if (docEl.clientWidth > 750) return
-      win.addEventListener(resizeEvt, recalc, false)
-    }(document, window))
+      (function (doc, win) {
+          // 获取页面所有html代码字符串
+          var docEl = doc.documentElement,
+              resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+              recalc = function () {
+                  var clientWidth = docEl.clientWidth > 750 ? 360 : docEl.clientWidth
+                  if (!clientWidth) return
+                  docEl.style.fontSize = clientWidth / 750 * 100 + 'px'
+              }
+          if (!doc.addEventListener) return
+          doc.addEventListener('DOMContentLoaded', recalc, false)
+          if (docEl.clientWidth > 750) return
+          win.addEventListener(resizeEvt, recalc, false)
+      }(document, window))
   </script>
   <style>
     html, body {
@@ -119,9 +119,9 @@
 </div>
 
 <script>
-  Vue.component('pet-box', {
-    props: ['pet'],
-    template: `
+    Vue.component('pet-box', {
+        props: ['pet'],
+        template: `
      <div class="pet-box">
       <p>{{pet.name}}</p>
       <p>{{pet.rareDegree}}</p>
@@ -129,75 +129,75 @@
       <p>{{pet.generation}}代</p>
     </div>
   `
-  });
-  new Vue({
-    el:'#app',
-    data: {
-      total:'未知',
-      rare: '',
-      orderBy: 'update_time',
-      order: 'desc',
-      page: '1',
-      petList: [],
-      generation: '',
-      priceHigh: ''
-    },
-    methods:{
-      getData:function(page, limit, order, orderBy, rare){
-        var url = 'https://jiamitu.mi.com/pet/ng/listng?';
-        var that = this;
-        url = url + 'page=' + page + '&limit=' + limit + '&order=' + order + '&orderBy=' + orderBy + '&rare=' + rare;
-        console.log(url);
-        $.get(url,function(data){
-          console.log(data);
-          that.total = data.result.total;
-          that.petList = data.result.data;
-          console.log(that);
-        });
-      },
-      searchData:function(){
-        this.getData(this.page, '50', this.order, this.orderBy, this.rare);
-      },
-      nextPage:function(){
-        this.page++;
-        this.searchData();
-      },
-      buyJump: function(event){
-        if($(event.path[1]).attr('class')==='pet-box'){
-          location.href = 'https://jiamitu.mi.com/babydetail?petId=' + $(event.path[1]).attr('pet-id');
-        }
-      }
-    },
-    computed:{
-      search: function(){
-        var newList = [],
-            that = this;
-        if(that.generation===''&&that.priceHigh===''){
-          newList = that.petList.slice();
-        }else{
-          that.petList.forEach(function(item){
-            if(that.generation!==''&&that.priceHigh===''&&(item.generation <= parseInt(that.generation))){
-              newList.push(item);
+    });
+    new Vue({
+        el:'#app',
+        data: {
+            total:'未知',
+            rare: '',
+            orderBy: 'update_time',
+            order: 'desc',
+            page: '1',
+            petList: [],
+            generation: '',
+            priceHigh: ''
+        },
+        methods:{
+            getData:function(page, limit, order, orderBy, rare){
+                var url = 'https://jiamitu.mi.com/pet/ng/listng?';
+                var that = this;
+                url = url + 'page=' + page + '&limit=' + limit + '&order=' + order + '&orderBy=' + orderBy + '&rare=' + rare;
+                console.log(url);
+                $.get(url,function(data){
+                    console.log(data);
+                    that.total = data.result.total;
+                    that.petList = data.result.data;
+                    console.log(that);
+                });
+            },
+            searchData:function(){
+                this.getData(this.page, '50', this.order, this.orderBy, this.rare);
+            },
+            nextPage:function(){
+                this.page++;
+                this.searchData();
+            },
+            buyJump: function(event){
+                if($(event.path[1]).attr('class')==='pet-box'){
+                    window.open('https://jiamitu.mi.com/babydetail?petId=' + $(event.path[1]).attr('pet-id'));
+                }
             }
-            if(that.generation===''&&that.priceHigh!==''&&item.price <= parseInt(that.priceHigh)){
-              newList.push(item);
+        },
+        computed:{
+            search: function(){
+                var newList = [],
+                    that = this;
+                if(that.generation===''&&that.priceHigh===''){
+                    newList = that.petList.slice();
+                }else{
+                    that.petList.forEach(function(item){
+                        if(that.generation!==''&&that.priceHigh===''&&(item.generation <= parseInt(that.generation))){
+                            newList.push(item);
+                        }
+                        if(that.generation===''&&that.priceHigh!==''&&item.price <= parseInt(that.priceHigh)){
+                            newList.push(item);
+                        }
+                        if(that.generation!==''&&that.priceHigh!==''&&item.price <= parseInt(that.priceHigh)&&(item.generation <= parseInt(that.generation))){
+                            newList.push(item);
+                        }
+                    });
+                }
+                return {
+                    generation: that.generation,
+                    priceHigh: that.priceHigh,
+                    searchResult:newList
+                }
             }
-            if(that.generation!==''&&that.priceHigh!==''&&item.price <= parseInt(that.priceHigh)&&(item.generation <= parseInt(that.generation))){
-              newList.push(item);
-            }
-          });
+        },
+        created:function(){
+            this.getData(this.page, '50', this.order, this.orderBy, this.rare);
         }
-        return {
-          generation: that.generation,
-          priceHigh: that.priceHigh,
-          searchResult:newList
-        }
-      }
-    },
-    created:function(){
-      this.getData(this.page, '50', this.order, this.orderBy, this.rare);
-    }
-  });
+    });
 </script>
 </body>
 </html>
