@@ -102,7 +102,8 @@
       <label for="page">页码:</label>
       <input type="number" name="page" id="page" v-model="page" placeholder="请输入数字">
       <button @click="searchData">查询</button>
-      <button @click="nextPage">下一页</button>
+      <button @click="prePage">上</button>
+      <button @click="nextPage">下</button>
       <div>一共{{total}}只</div>
     </div>
     <div class="searchArea">
@@ -159,6 +160,10 @@
                 this.getData(this.page, '50', this.order, this.orderBy, this.rare);
             },
             nextPage:function(){
+                this.page++;
+                this.searchData();
+            },
+            prePage:function(){
                 this.page++;
                 this.searchData();
             },
